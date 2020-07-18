@@ -12,3 +12,5 @@ repl-temp-*
 
 # IntelliJ stuff
 .idea
+/.cache
+/dist
