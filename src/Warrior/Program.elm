@@ -30,7 +30,7 @@ import Warrior.Direction as Direction
 import Warrior.Internal.History as History exposing (History)
 import Warrior.Internal.Map as Map exposing (Map)
 import Warrior.Internal.Warrior as Player
-import Warrior.Item as Item
+import Warrior.Item as Item exposing(toString)
 import Warrior.Map.Builder as MapTemplate exposing (Template)
 import Warrior.Map.Progression as Progression exposing (Progression, ProgressionFunction)
 import Warrior.Map.Tile as Tile
@@ -460,7 +460,7 @@ view model =
                     , Element.row
                         []
                         [ Element.column
-                            [ Element.width <| Element.px 200
+                            [ Element.width <| Element.px 300
                             , Element.alignTop
                             ]
                             (List.map viewPlayerLegend state.warriors)
@@ -497,6 +497,16 @@ view model =
         )
 
 
+formatAttributes : Warrior -> String
+formatAttributes warrior =
+    let
+        getHealthAttr attr = String.fromInt <| attr warrior
+        getHealth = String.join "," [getHealthAttr Warrior.health, getHealthAttr Warrior.maxHealth, getHealthAttr Warrior.healingPotential]
+        getInventory = String.join "," <| List.map (\item -> Item.toString item) <| Warrior.inventory warrior
+    in
+    String.concat ["(", getHealth, ") [", getInventory, "]"]
+
+
 viewPlayerLegend : PlayerDescription -> Element msg
 viewPlayerLegend pc =
     let
@@ -513,6 +523,7 @@ viewPlayerLegend pc =
             ]
             Element.none
         , Element.text (Player.id pc.state)
+        , Element.text (formatAttributes pc.state)
         ]
 
 
